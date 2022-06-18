@@ -1,0 +1,78 @@
+{% extends 'movie/base.html' %}
+{% block title %}
+    <title>Movie - {{ post.title }}</title>
+{% endblock %}
+
+{% block main_area %}
+  <!-- Page Content -->
+  <div class="container">
+
+    <div class="row">
+
+      <!-- Post Content Column -->
+      <div class="col-lg-8">
+
+        <!-- Title -->
+        <h1 class="mt-4">{{ post.title }}</h1>
+
+        <!-- Author -->
+        <p class="lead">
+          by
+          <a href="#">{{ post.author }}</a>
+        </p>
+
+        <hr>
+
+        <!-- Date/Time -->
+        <p>Posted on {{ post.created_at }}</p>
+
+        <hr>
+
+        <!-- Preview Image -->
+        {% if post.head_image %}
+        <img class="img-fluid rounded" src="{{ post.head_image.url }}" alt="">
+        {% endif %}
+
+        <hr>
+
+        <!-- Post Content -->
+        <p>{{ post.content }}</p>
+
+        {% if post.attached_file %}
+            <a href= "{{ post.attached_file.url }}" type="button" class="btn btn-outline-dark" download>첨부 파일 다운로드</a>
+            {{ post.get_file_name }}
+        {% endif %}
+
+        <hr>
+        {% if post.tags.exists %}
+            <br />
+            <i class = "fas fa-tags"></i>
+            {% for tag in post.tags.iterator %}
+                <a href = {{ tag.get_absolute_url }}> {{ tag }}</a>
+            {% endfor %}
+            <br />
+            <br />
+        {% endif %}
+
+        <!-- Comments Form -->
+        <div class="card my-4">
+          <h5 class="card-header">Leave a Comment:</h5>
+          <div class="card-body">
+            <form>
+              <div class="form-group">
+                <textarea class="form-control" rows="3"></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Single Comment -->
+        <div class="media mb-4">
+          <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
+          <div class="media-body">
+            <h5 class="mt-0">Commenter Name</h5>
+            Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+          </div>
+        </div>
+{% endblock %}
