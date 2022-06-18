@@ -3,6 +3,11 @@
     <title>Movie</title>
 {% endblock %}
 {% block main_area %}
+                {% if user.is_authenticated %}
+                    {% if user.is_staff or user.is_superuser %}
+                        <a href = "/movie/create_post" role="button"> Create Post</a>
+                    {% endif %}
+                {% endif %}
 
                 <h1>Movie
                     {% if category %} in category '{{ category }}' {% endif %}

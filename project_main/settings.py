@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'movie',
     'project_main',
     'single_pages',
+    'crispy_forms',
+    'markdownx',
 ]
 
 MIDDLEWARE = [
