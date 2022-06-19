@@ -27,6 +27,14 @@ class SearchFormView(FormView):
         return render(self.request, self.template_name, context)
 
 
+def movie_post(request):
+    movie_category = '영화정보'
+    return render(request, 'movie/movieposts.html',{
+        'recent_movie_post' : Post.objects.filter(category__name=movie_category).order_by('-pk'),
+        'movie_category' : '영화정보',
+    })
+
+
 def my_post(request):
     post = Post.objects.all()
     mypost = post.filter(author_id=request.user.id).order_by('-pk')

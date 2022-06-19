@@ -1,22 +1,6 @@
 {% extends 'movie/base.html' %}
-{% block title %}
-    <title>Movie 게시판</title>
-{% endblock %}
 {% block main_area %}
-                {% if user.is_authenticated %}
-{#                    {% if user.is_staff or user.is_superuser %}#}
-                        <a href = "/movie/create_post" role="button"> Create Post</a>
-{#                    {% endif %}#}
-                {% endif %}
-                <hr>
-                <h1> 게시판
-                    {% if category %}
-                        in category '{{ category }}'
-                    {% endif %}
-                    {% if tag %} with tag '{{ tag }}' {% endif %}
-                </h1>
-
-                {% for p in post_list %}
+                {% for p in 'recent_movie_post' %}
                 <!-- Blog Post -->
                 <div class="card mb-4">
                     {% if p.head_image %}
@@ -24,7 +8,7 @@
                     {% endif %}
 
                     <div class="card-body">
-                        <a href="{{ p.get_absolute_url }}" <h2 class="card-title">{{ p.title}}</h2> </a>
+                        <a href="{{ p.get_absolute_url }}"<h2 class="card-title">{{ p.title}}</h2></a>
                         {% if p.hook_msg %}
                             <p class="card-text">{{ p.hook_msg }}</p>
                         {% else %}
@@ -41,8 +25,7 @@
                         {% endif %}
                     </div>
                     <div class="card-footer text-muted">
-                        Posted on {{ p.created_at}} by
-                        <a href="#">{{ p.author }}</a>
+                        Posted on {{ p.created_at}} by {{ p.author }}
                     </div>
                 </div>
                 {% endfor %}
