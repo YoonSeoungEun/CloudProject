@@ -1,0 +1,23 @@
+{% extends "movie/base.html" %}
+
+{% block title %}
+    <title>Movie search</title>
+{% endblock %}
+
+{% block main_area %}
+<form action="." method="post"> {% csrf_token %}
+    {{ form.as_table }}
+    <input type="submit" value="Submit" class="btn btn-primary btn-sm">
+</form>
+
+<br/><br/>
+{% if object_list %}
+    {% for post in object_list %}
+        <h3><a href='{{ post.get_absolute_url }}'>{{ post.title }}</a></h3>
+        {{ post.modify_date|date:"N d, Y" }}
+        <p>{{ post.description }}</p>
+    {% endfor %}
+{% elif search_term %}
+    <b><i>Search Word({{ search_term }}) Not Found</i></b>
+{% endif %}
+{% endblock %}

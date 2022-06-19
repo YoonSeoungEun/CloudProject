@@ -1,18 +1,35 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import PermissionDenied
+from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 
 # Create your views here.
-from django.views.generic import DetailView, ListView, CreateView, UpdateView
+from django.views.generic import DetailView, ListView, CreateView, UpdateView, FormView
 
-from movie.forms import CommentForm
+from movie.forms import CommentForm, PostSearchForm
 from movie.models import Post, Category, Tag
+
+
+class SearchFormView(FormView):
+    form_class = PostSearchForm
+    template_name = 'movie/post_search.html'
+
+    def form_valid(self, form):
+        searchWord = form.cleaned_data['search_word']
+        post_list = Post.objects.filter(Q(title__contains=searchWord) | Q(content__icontains=searchWord)).distinct()
+
+        context = {}
+        context['form'] = form
+        context['search_term'] = searchWord
+        context['object_list'] = post_list
+
+        return render(self.request, self.template_name, context)
 
 
 def my_post(request):
     post = Post.objects.all()
-    mypost = post.filter(author_id=request.user.id)
+    mypost = post.filter(author_id=request.user.id).order_by('-pk')
     context = {
         'my_post_list' : mypost
     }
@@ -30,12 +47,12 @@ def delete_post(request, pk):
 
 class PostUpdate(LoginRequiredMixin, UpdateView):
     model = Post
-    fields = ['title', 'content', 'head_image', 'attached_file', 'category']
+    fields = ['title', 'content', 'hook_msg', 'head_image', 'attached_file', 'category', 'tags']
 
     template_name = 'movie/post_form_update.html'
 
     def dispatch(self, request, *args, **kwargs):
-        if request.user.is_autheticated and request.user == self.get_object().author:
+        if request.user == self.get_object().author:
             return super(PostUpdate, self).dispatch(request, *args, **kwargs)
         else:
             raise PermissionDenied
@@ -43,7 +60,7 @@ class PostUpdate(LoginRequiredMixin, UpdateView):
 
 class PostCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Post
-    fields = ['title', 'content', 'head_image', 'attached_file', 'category']
+    fields = ['title', 'content', 'head_image', 'hook_msg', 'attached_file', 'category', 'tags']
 
     def test_func(self):
         return self.request.user.is_superuser or self.request.user.is_staff or self.request.user.is_authenticated

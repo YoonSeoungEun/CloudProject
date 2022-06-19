@@ -1,19 +1,17 @@
 {% extends 'movie/base.html' %}
 {% load crispy_forms_tags %}
 {% block title %}
-    <title>Movie - {{ post.title }}</title>
+    <title>Movie  - {{ post.title }}</title>
 {% endblock %}
 
 {% block main_area %}
       <!-- Post Content Column -->
-      <div class="col-lg-8">
+    <div class="col-lg-8">
 
       {% if user.is_authenticated  and user == post.author %}
-          <a href = "/movie/{{ post.pk }}/update/"> Update Post </a>
-          <p></p>
-          <a href="/movie/{{post.pk}}/delete/"> Delete Post </a>
+          <a href = "/movie/{{ post.pk }}/update_post/"> Update Post </a>
       {% endif %}
-
+      <hr>
         <!-- Title -->
         <h1 class="mt-4">{{ post.title }}</h1>
 
@@ -53,22 +51,12 @@
                 <a href = {{ tag.get_absolute_url }}> {{ tag }}</a>
             {% endfor %}
             <br />
-            <br />
         {% endif %}
 
-        <!-- Comments Form -->
-        <div class="card my-4">
-          <h5 class="card-header">Leave a Comment:</h5>
-          <div class="card-body">
-            <form method="post" action="{{ post.get_absolute_url }}addcomment/"> {% csrf_token %}
-              <div class="form-group">
-{#                <textarea class="form-control" rows="3"></textarea>#}
-                  {{ comment_form | crispy }}
-              </div>
-              <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
-          </div>
-        </div>
+      <hr/>
+      {% if user.is_authenticated  and user == post.author %}
+          <a href="/movie/{{post.pk}}/delete/"> Delete Post </a>
+      {% endif %}
 
         <!-- Single Comment -->
       {% if post.comment_set.exists %}
@@ -83,5 +71,22 @@
         {% endfor %}
       {% endif %}
       </div>
-      <hr/>
+    
+        <!-- Comments Form -->
+        <div class="card my-4">
+          <h5 class="card-header">Leave a Comment:</h5>
+          <div class="card-body">
+            <form method="post" action="{{ post.get_absolute_url }}addcomment/"> {% csrf_token %}
+              <div class="form-group">
+{#                <textarea class="form-control" rows="3"></textarea>#}
+                  {{ comment_form | crispy }}
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+          </div>
+        </div>
+
+
+
+
 {% endblock %}

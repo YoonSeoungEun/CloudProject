@@ -26,11 +26,15 @@
                     <h5 class="card-header">Search</h5>
                     <div class="card-body">
                         <div class="input-group">
+
+{#                            {% include 'movie/post_search.html' %}#}
                             <input type="text" class="form-control" placeholder="Search for...">
                             <span class="input-group-btn">
-                                <button class="btn btn-secondary" type="button">Go!</button>
+                                <a href="/movie/search/"> <button class="btn btn-secondary" type="button">검색</button></a>
                             </span>
                         </div>
+
+
                     </div>
                 </div>
 

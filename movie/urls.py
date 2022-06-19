@@ -13,4 +13,5 @@ urlpatterns = [
     path('<int:pk>/addcomment/', views.addComment),
     path('<int:pk>/delete/', delete_post),
     path('my_post/', my_post),
+    path('search/', views.SearchFormView.as_view()),
 ]
