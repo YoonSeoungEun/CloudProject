@@ -1,7 +1,4 @@
 {% extends 'movie/base.html' %}
-{% block title %}
-    <title>Movie</title>
-{% endblock %}
 {% block main_area %}
                 {% if user.is_authenticated %}
 {#                    {% if user.is_staff or user.is_superuser %}#}
@@ -9,12 +6,7 @@
 {#                    {% endif %}#}
                 {% endif %}
 
-                <h1>Movie
-                    {% if category %} in category '{{ category }}' {% endif %}
-                    {% if tag %} with tag '{{ tag }}' {% endif %}
-                </h1>
-
-                {% for p in post_list %}
+                {% for p in my_post_list %}
                 <!-- Blog Post -->
                 <div class="card mb-4">
                     {% if p.head_image %}

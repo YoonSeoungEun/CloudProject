@@ -52,7 +52,7 @@ class Post(models.Model):
         return f'[{self.pk}] {self.title} :: {self.author}'
 
     def get_absolute_url(self):
-        return f'/movie/{self.pk}'
+        return f'/movie/{self.pk}/'
 
     def get_file_name(self):
         return os.path.basename(self.attached_file.name)

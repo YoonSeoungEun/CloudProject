@@ -9,8 +9,11 @@
       <div class="col-lg-8">
 
       {% if user.is_authenticated  and user == post.author %}
-            <a href = "/movie/update/{{ post.pk }}"> Update blog </a>
+          <a href = "/movie/{{ post.pk }}/update/"> Update Post </a>
+          <p></p>
+          <a href="/movie/{{post.pk}}/delete/"> Delete Post </a>
       {% endif %}
+
         <!-- Title -->
         <h1 class="mt-4">{{ post.title }}</h1>
 

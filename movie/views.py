@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect, get_object_or_404
@@ -7,6 +8,24 @@ from django.views.generic import DetailView, ListView, CreateView, UpdateView
 
 from movie.forms import CommentForm
 from movie.models import Post, Category, Tag
+
+
+def my_post(request):
+    post = Post.objects.all()
+    mypost = post.filter(author_id=request.user.id)
+    context = {
+        'my_post_list' : mypost
+    }
+    return render(request, 'movie/myposts.html', context)
+
+
+def delete_post(request, pk):
+    post = Post.objects.get(pk=pk)
+    if request.method == 'POST':
+        post.delete()
+        messages.success(request, '성공적으로 삭제하였습니다.')
+        return redirect('http://127.0.0.1:8000/movie/')
+    return render(request, 'movie/post_delete.html', {'Post': post})
 
 
 class PostUpdate(LoginRequiredMixin, UpdateView):
@@ -27,10 +46,11 @@ class PostCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     fields = ['title', 'content', 'head_image', 'attached_file', 'category']
 
     def test_func(self):
-        return self.request.user.is_superuser or self.request.user.is_staff
+        return self.request.user.is_superuser or self.request.user.is_staff or self.request.user.is_authenticated
+
     def form_valid(self, form):
         current_user = self.request.user
-        if current_user.is_authenticated and (current_user.is_staff or current_user.is_superuser):
+        if current_user.is_authenticated or (current_user.is_staff or current_user.is_superuser):
             form.instance.author = current_user
             return super(PostCreate, self).form_valid(form)
         else:
@@ -38,7 +58,7 @@ class PostCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 
 
 def show_category_posts(request, slug):
-    if slug=='no-category':
+    if slug == 'no-category':
         category = '미분류'
         post_list = Post.objects.filter(category=None)
     else:
